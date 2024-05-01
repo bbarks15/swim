@@ -5,7 +5,10 @@ use serde::Serialize;
 
 #[derive(Debug, Serialize)]
 enum Set {
-    Repetition(u32, Box<Set>),
+    Repetition {
+        number: u32,
+        set: Box<Set>,
+    },
     Statement {
         distance: u32,
         stroke: String,
@@ -17,7 +20,7 @@ enum Set {
 impl Set {
     fn total_distance(&self) -> u32 {
         match self {
-            Set::Repetition(reps, inner) => reps * inner.total_distance(),
+            Set::Repetition { number, set } => number * set.total_distance(),
             Set::Statement { distance, .. } => *distance,
             Set::Block(blocks) => blocks.iter().map(|block| block.total_distance()).sum(),
         }
@@ -25,7 +28,7 @@ impl Set {
 
     fn total_duration(&self) -> u32 {
         match self {
-            Set::Repetition(reps, inner) => inner.total_duration().checked_mul(*reps).unwrap(),
+            Set::Repetition { number, set } => set.total_duration().checked_mul(*number).unwrap(),
             Set::Statement { interval, .. } => *interval,
             Set::Block(blocks) => blocks.iter().map(|block| block.total_duration()).sum(),
         }
@@ -40,9 +43,9 @@ impl Set {
 
 fn distribution_helper<'a>(set: &'a Set, strokes: &mut HashMap<&'a str, u32>) {
     match set {
-        Set::Repetition(reps, inner) => {
-            for _ in 0..*reps {
-                distribution_helper(inner, strokes);
+        Set::Repetition { number, set } => {
+            for _ in 0..*number {
+                distribution_helper(set, strokes);
             }
         }
         Set::Statement {
@@ -116,7 +119,10 @@ fn parser() -> impl Parser<char, Set, Error = Simple<char>> {
         let repetition = text::int(10)
             .then_ignore(just('x').padded())
             .then(block.or(statement))
-            .map(|(reps, set)| Set::Repetition(reps.parse().unwrap(), Box::new(set)));
+            .map(|(reps, set)| Set::Repetition {
+                number: reps.parse().unwrap(),
+                set: Box::new(set),
+            });
 
         repetition
     });
