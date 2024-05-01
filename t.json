@@ -1,0 +1,67 @@
+{
+  "Block": [
+    {
+      "Repetition": [
+        1,
+        { "Statement": { "distance": 100, "stroke": "fly", "interval": 90 } }
+      ]
+    },
+    { "Statement": { "distance": 50, "stroke": "fly", "interval": 60 } },
+    {
+      "Repetition": [
+        4,
+        {
+          "Block": [
+            {
+              "Statement": {
+                "distance": 10,
+                "stroke": "fast/easy",
+                "interval": 60
+              }
+            },
+            {
+              "Repetition": [
+                12,
+                {
+                  "Statement": {
+                    "distance": 50,
+                    "stroke": "free",
+                    "interval": 60
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Repetition": [
+        12,
+        {
+          "Block": [
+            {
+              "Statement": {
+                "distance": 10,
+                "stroke": "fast/easy",
+                "interval": 60
+              }
+            },
+            {
+              "Repetition": [
+                12,
+                {
+                  "Statement": {
+                    "distance": 50,
+                    "stroke": "free",
+                    "interval": 60
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
