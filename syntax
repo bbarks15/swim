@@ -1,0 +1,46 @@
+# Top level
+workout    = (set)*
+
+# Set types
+<<<<<<< HEAD
+<<<<<<< HEAD
+set        = repetition | statement
+
+# Repetition structure
+=======
+set        = repetition | statement | block
+
+# Block and repetition structure
+block      = "{" (set)+ "}"
+>>>>>>> Snippet
+repetition = number "x" (block | statement)
+block      = "{" (set)+ "}"
+=======
+set        = repetition | statement | block
+
+# Block and repetition structure
+block      = "{" (set)+ "}"
+repetition = number "x" (block | statement)
+>>>>>>> Snippet
+
+# Basic statement structure
+statement  = distance stroke interval
+distance   = number ("m" | "km")
+stroke     = word ("(" modifier ("," modifier)* ")")?
+
+# Interval timing
+interval   = "@" (seconds | minutes_seconds)
+seconds    = number "s"
+minutes_seconds = number ":" number "s"?
+
+# Basic elements
+number     = [0-9]+
+word       = [a-zA-Z][a-zA-Z.-]*
+modifier   = word
+
+# Whitespace and comments
+whitespace = [ \t\n\r]+
+comment    = shell_comment | c_comment | cpp_comment
+shell_comment = "#" [^\n]*
+cpp_comment  = "//" [^\n]*
+c_comment    = "/*" ([^*] | "*" [^/])* "*/"
