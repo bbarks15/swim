@@ -1,18 +1,15 @@
-use clap::Parser;
-
 use logos::Logos;
 use swim_parser::lexer::Token;
 
-#[derive(Parser, Debug)]
-#[command(version, about, long_about = None)]
-struct Args {
-    set: String,
-}
-
 fn main() {
-    let args = Args::parse();
+    let args: Vec<String> = std::env::args().collect();
 
-    let set_file = std::fs::read_to_string(args.set).unwrap();
+    if args.len() != 2 {
+        eprintln!("Usage: {} <file>", args[0]);
+        std::process::exit(1);
+    }
+
+    let set_file = std::fs::read_to_string(&args[1]).unwrap();
 
     let mut lexer = Token::lexer(&set_file);
 
