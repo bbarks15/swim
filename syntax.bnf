@@ -1,0 +1,39 @@
+/* Swim workout syntax in Extended BNF (EBNF) notation */
+
+/* Top level structure */
+<workout>    ::= <set>*
+
+/* Set definitions */
+<set>        ::= <repetition> | <statement> | <block>
+<repetition> ::= <number> "x" (<block> | <statement>)
+<block>      ::= "{" <set>+ "}"
+
+/* Statement structure */
+<statement>  ::= <distance> <stroke> <interval>
+<distance>   ::= <number> ("m" | "km")
+<stroke>     ::= <word> ("(" <modifier-list> ")")?
+<modifier-list> ::= <modifier> ("," <modifier>)*
+
+/* Interval timing */
+<interval>   ::= "@" (<seconds> | <minutes-seconds>)
+<seconds>    ::= <number> "s"
+<minutes-seconds> ::= <number> ":" <number> "s"?
+
+/* Basic elements */
+<number>     ::= [0-9]+
+<word>       ::= [a-zA-Z] [a-zA-Z.-]*
+<modifier>   ::= <word>
+
+/* Whitespace handling */
+<whitespace> ::= [ \t\n\r]+
+
+/* Comment syntax */
+<comment>    ::= <shell-comment> | <c-comment> | <cpp-comment>
+<shell-comment> ::= "#" [^\n]*
+<cpp-comment>   ::= "//" [^\n]*
+<c-comment>     ::= "/*" ([^*] | "*" [^/])* "*/"
+
+/* Lexical rules */
+- Whitespace and comments are ignored between tokens
+- Comments can appear anywhere whitespace is allowed
+- Case is significant in <word>
