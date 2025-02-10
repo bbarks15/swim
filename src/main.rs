@@ -1,5 +1,4 @@
-use logos::Logos;
-use swim_parser::lexer::Token;
+use swim_parser::{analyse::Analyse, parser::Parser};
 
 fn main() {
     let args: Vec<String> = std::env::args().collect();
@@ -11,9 +10,17 @@ fn main() {
 
     let set_file = std::fs::read_to_string(&args[1]).unwrap();
 
-    let mut lexer = Token::lexer(&set_file);
+    let mut parser = Parser::new(&set_file);
 
-    while let Some(token) = lexer.next() {
-        println!("{:?}: {:?}", token, lexer.slice());
+    let workout = parser.parse().unwrap();
+
+    let total_distance = workout.total_distance();
+    println!("Total distance: {} meters", total_distance);
+
+    let distribution = workout.stroke_distribution();
+
+    // Print distribution
+    for (stroke, distance) in distribution {
+        println!("{}: {}m", stroke, distance);
     }
 }

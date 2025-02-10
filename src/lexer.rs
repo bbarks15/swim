@@ -1,9 +1,9 @@
 use logos::Logos;
 
-#[derive(Debug, Logos, PartialEq)]
+#[derive(Clone, Debug, Logos, PartialEq)]
 #[logos(skip r"[ \t\n\r]+")]
 pub enum Token<'source> {
-    #[regex(r"[0-9]+", |lex| lex.slice().parse::<u32>().ok(), priority = 3)]
+    #[regex(r"[0-9]+", |lex| lex.slice().parse::<u32>().ok())]
     Number(u32),
 
     #[token("x", priority = 4)]
@@ -36,8 +36,8 @@ pub enum Token<'source> {
     #[token("@")]
     At,
 
-    #[regex(r"[0-9]+s", |lex| lex.slice().trim_end_matches('s').parse::<u32>().ok())]
-    Seconds(u32),
+    #[regex("s", priority = 3)]
+    Seconds,
 
     #[regex(r"[0-9]+:[0-9]+s?", |lex| lex.slice())]
     Time(&'source str),
@@ -130,9 +130,12 @@ mod tests {
         assert_eq!(lex.span(), 0..1);
         assert_eq!(lex.slice(), "@");
 
-        assert_eq!(lex.next(), Some(Ok(Token::Seconds(30))));
-        assert_eq!(lex.span(), 1..4);
-        assert_eq!(lex.slice(), "30s");
+        assert_eq!(lex.next(), Some(Ok(Token::Number(30))));
+        assert_eq!(lex.span(), 1..3);
+        assert_eq!(lex.slice(), "30");
+        assert_eq!(lex.next(), Some(Ok(Token::Seconds)));
+        assert_eq!(lex.span(), 3..4);
+        assert_eq!(lex.slice(), "s");
 
         assert_eq!(lex.next(), None);
     }
